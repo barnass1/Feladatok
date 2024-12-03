@@ -46,5 +46,6 @@ namespace FeladatokForm
             MessageBox.Show("Task saved successfully!");
             this.Close();
         }
+
     }
 }
