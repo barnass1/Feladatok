@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeladatokForm", "FeladatokForm\FeladatokForm.csproj", "{833B3B9D-1A5E-48BD-8B8D-8BBF2E40FC76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{833B3B9D-1A5E-48BD-8B8D-8BBF2E40FC76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{833B3B9D-1A5E-48BD-8B8D-8BBF2E40FC76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{833B3B9D-1A5E-48BD-8B8D-8BBF2E40FC76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{833B3B9D-1A5E-48BD-8B8D-8BBF2E40FC76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29614438-5C2E-41D1-AA7C-9A10BC6C5F61}
+	EndGlobalSection
+EndGlobal
