@@ -73,5 +73,89 @@ namespace FeladatokForm
             UjTask ujTaskForm = new UjTask();
             ujTaskForm.ShowDialog();
         }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                var result = MessageBox.Show("Biztosan bezárod?", "Ablak bezárása", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+            base.OnFormClosing(e);
+        }
+
+        private void buttonTorles_Click(object sender, EventArgs e)
+        {
+            if (FeladatokDataGridView1.CurrentRow != null && FeladatokDataGridView1.CurrentRow.DataBoundItem != null)
+            {
+                var selectedTask = (Models.Task)FeladatokDataGridView1.CurrentRow.DataBoundItem;
+                _context.Tasks.Remove(selectedTask);
+                _context.SaveChanges();
+                Load_Feladatok();
+            }
+            else
+            {
+                MessageBox.Show("Nincs törölhetõ feladat");
+            }
+        }
+
+
+        private void buttonSzerk_Click(object sender, EventArgs e)
+        {
+            if (FeladatokDataGridView1.CurrentRow != null)
+            {
+                var selectedTask = (Models.Task)FeladatokDataGridView1.CurrentRow.DataBoundItem;
+                FeladatSzerkesztes feladatSzerkesztesForm = new FeladatSzerkesztes(selectedTask);
+                feladatSzerkesztesForm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Nincs fealadat kijelölve");
+            }
+        }
+
+
+        private void FelhasznaloTorles_Click(object sender, EventArgs e)
+        {
+            var selectedUser = (User)listBoxFelhasznalok.SelectedItem;
+            if (selectedUser != null)
+            {
+                var result = MessageBox.Show(
+                    "Biztosan kitörlöd a felhasználót és minden hozzá tartozó feladatot?",
+                    "Felhasználó törlése",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    // Retrieve and delete all tasks associated with the selected user
+                    var userTasks = _context.Tasks.Where(t => t.UserId == selectedUser.Id).ToList();
+                    _context.Tasks.RemoveRange(userTasks);
+
+                    // Delete the selected user
+                    _context.Users.Remove(selectedUser);
+                    _context.SaveChanges();
+
+                    // Reload the users and tasks
+                    Load_Felhasznalok();
+                    Load_Feladatok();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nincs kijelölve felhasználó");
+            }
+        }
+
+        private void UjFelhasznalo_Click(object sender, EventArgs e)
+        {
+            FelhasznaloHozzaadas felhasznaloHozzaadasForm = new FelhasznaloHozzaadas();
+            felhasznaloHozzaadasForm.ShowDialog();
+            Load_Felhasznalok();
+        }
     }
 }

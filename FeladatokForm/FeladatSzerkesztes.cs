@@ -1,31 +1,33 @@
 ﻿using FeladatokForm.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace FeladatokForm
 {
-    public partial class UjTask : Form
+    public partial class FeladatSzerkesztes : Form
     {
         private FeladatokDbContext _context;
+        private Models.Task _task;
         private bool _taskSaved = false;
 
-        public UjTask()
+        public FeladatSzerkesztes(Models.Task task)
         {
             InitializeComponent();
-            UjTask_Load(null, null);
+            _context = new FeladatokDbContext();
+            _task = task;
+            LoadTaskDetails();
         }
 
-        private void UjTask_Load(object sender, EventArgs e)
+        private void LoadTaskDetails()
         {
-            _context = new FeladatokDbContext();
-            var felhasznalok = _context.Users.ToList();
-
-            comboBox3.DataSource = felhasznalok;
-            comboBox3.DisplayMember = "Username";
-            comboBox3.ValueMember = "Id";
-
             var priorityList = new[] { "Alacsony", "Közepes", "Magas" };
             comboBox1.DataSource = priorityList;
 
@@ -36,27 +38,29 @@ namespace FeladatokForm
             dateTimePicker1.CustomFormat = "yyyy-MM-dd HH:mm";
             dateTimePicker1.ShowUpDown = true;
 
+            textBox1.Text = _task.Title;
+            textBox2.Text = _task.Description;
+            dateTimePicker1.Value = _task.DueDate ?? DateTime.Now;
+            comboBox1.SelectedItem = _task.Priority;
+            comboBox2.SelectedItem = _task.Status;
 
+            
         }
+
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var newTask = new Models.Task
-            {
-                Title = textBox1.Text,
-                Description = textBox2.Text,
-                DueDate = dateTimePicker1.Value,
-                UserId = (int)comboBox3.SelectedValue,
-                Priority = comboBox1.Text,
-                Status = comboBox2.Text,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
+            _task.Title = textBox1.Text;
+            _task.Description = textBox2.Text;
+            _task.DueDate = dateTimePicker1.Value;
+            _task.Priority = comboBox1.Text;
+            _task.Status = comboBox2.Text;
+            _task.UpdatedAt = DateTime.Now;
 
-            _context.Tasks.Add(newTask);
+            _context.Tasks.Update(_task);
             _context.SaveChanges();
 
-            MessageBox.Show("Task saved successfully!");
+            MessageBox.Show("Task updated successfully!");
             _taskSaved = true;
             this.Close();
         }

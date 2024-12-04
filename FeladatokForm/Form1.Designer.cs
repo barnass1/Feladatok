@@ -43,12 +43,13 @@
             userDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             userBindingSource = new BindingSource(components);
             taskBindingSource = new BindingSource(components);
-            UserChange = new Button();
+            FelhasznaloTorles = new Button();
             buttonUj = new Button();
             buttonSzerk = new Button();
             buttonTorles = new Button();
             listBoxFelhasznalok = new ListBox();
             textBox1 = new TextBox();
+            UjFelhasznalo = new Button();
             ((System.ComponentModel.ISupportInitialize)FeladatokDataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)userBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)taskBindingSource).BeginInit();
@@ -168,15 +169,16 @@
             // 
             taskBindingSource.DataSource = typeof(Models.Task);
             // 
-            // UserChange
+            // FelhasznaloTorles
             // 
-            UserChange.Location = new Point(9, 698);
-            UserChange.Margin = new Padding(2);
-            UserChange.Name = "UserChange";
-            UserChange.Size = new Size(233, 36);
-            UserChange.TabIndex = 3;
-            UserChange.Text = "Felhasználók kezelése";
-            UserChange.UseVisualStyleBackColor = true;
+            FelhasznaloTorles.Location = new Point(9, 698);
+            FelhasznaloTorles.Margin = new Padding(2);
+            FelhasznaloTorles.Name = "FelhasznaloTorles";
+            FelhasznaloTorles.Size = new Size(234, 36);
+            FelhasznaloTorles.TabIndex = 3;
+            FelhasznaloTorles.Text = "Felhasználó törlése";
+            FelhasznaloTorles.UseVisualStyleBackColor = true;
+            FelhasznaloTorles.Click += FelhasznaloTorles_Click;
             // 
             // buttonUj
             // 
@@ -198,6 +200,7 @@
             buttonSzerk.TabIndex = 5;
             buttonSzerk.Text = "Feladat szerkesztése";
             buttonSzerk.UseVisualStyleBackColor = true;
+            buttonSzerk.Click += buttonSzerk_Click;
             // 
             // buttonTorles
             // 
@@ -208,6 +211,7 @@
             buttonTorles.TabIndex = 6;
             buttonTorles.Text = "Feladat törlése";
             buttonTorles.UseVisualStyleBackColor = true;
+            buttonTorles.Click += buttonTorles_Click;
             // 
             // listBoxFelhasznalok
             // 
@@ -218,7 +222,7 @@
             listBoxFelhasznalok.Location = new Point(9, 128);
             listBoxFelhasznalok.Margin = new Padding(2);
             listBoxFelhasznalok.Name = "listBoxFelhasznalok";
-            listBoxFelhasznalok.Size = new Size(234, 554);
+            listBoxFelhasznalok.Size = new Size(234, 504);
             listBoxFelhasznalok.TabIndex = 7;
             listBoxFelhasznalok.SelectedIndexChanged += listBoxFelhasznalok_SelectedIndexChanged;
             // 
@@ -230,17 +234,29 @@
             textBox1.TabIndex = 8;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
+            // UjFelhasznalo
+            // 
+            UjFelhasznalo.Location = new Point(9, 658);
+            UjFelhasznalo.Margin = new Padding(2);
+            UjFelhasznalo.Name = "UjFelhasznalo";
+            UjFelhasznalo.Size = new Size(234, 36);
+            UjFelhasznalo.TabIndex = 9;
+            UjFelhasznalo.Text = "Felhasználó hozzáadása";
+            UjFelhasznalo.UseVisualStyleBackColor = true;
+            UjFelhasznalo.Click += UjFelhasznalo_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1218, 743);
+            Controls.Add(UjFelhasznalo);
             Controls.Add(textBox1);
             Controls.Add(listBoxFelhasznalok);
             Controls.Add(buttonTorles);
             Controls.Add(buttonSzerk);
             Controls.Add(buttonUj);
-            Controls.Add(UserChange);
+            Controls.Add(FelhasznaloTorles);
             Controls.Add(FeladatokDataGridView1);
             Controls.Add(CimText);
             Margin = new Padding(2);
@@ -257,7 +273,7 @@
 
         private Label CimText;
         private DataGridView FeladatokDataGridView1;
-        private Button UserChange;
+        private Button FelhasznaloTorles;
         private Button buttonUj;
         private Button buttonSzerk;
         private Button buttonTorles;
@@ -275,5 +291,6 @@
         private BindingSource taskBindingSource;
         private BindingSource userBindingSource;
         private TextBox textBox1;
+        private Button UjFelhasznalo;
     }
 }
