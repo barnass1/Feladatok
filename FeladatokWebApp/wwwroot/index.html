@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feladatok Táblázat</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            margin: 20px 0;
+        }
+
+            .form-container input, .form-container select, .form-container button {
+                margin: 5px;
+                padding: 8px;
+            }
+    </style>
+</head>
+<body>
+    <h1>Feladatok</h1>
+
+    <!-- Feladatok táblázata -->
+    <table>
+        <thead>
+            <tr>
+                <th>Cím</th>
+                <th>Leírás</th>
+                <th>Határidő</th>
+                <th>Prioritás</th>
+                <th>Állapot</th>
+                <th>Felhasználó</th>
+                <th>Akciók</th>
+            </tr>
+        </thead>
+        <tbody id="tb_feladatok">
+            <!-- A feladatok itt kerülnek dinamikusan betöltésre -->
+        </tbody>
+    </table>
+
+    <!-- Új feladat hozzáadása -->
+    <div class="form-container">
+        <h3>Új feladat hozzáadása</h3>
+        <input type="text" id="newTitle" placeholder="Feladat címe" />
+        <input type="text" id="newDescription" placeholder="Leírás" />
+        <input type="datetime-local" id="newDueDate" />
+        <select id="newPriority">
+            <option value="Alacsony">Alacsony</option>
+            <option value="Közepes">Közepes</option>
+            <option value="Magas">Magas</option>
+        </select>
+        <select id="newStatus">
+            <option value="Folyamatban">Folyamatban</option>
+            <option value="Befejezett">Befejezett</option>
+        </select>
+        <select id="newUser">
+            <option value="" disabled selected>Válassz felhasználót</option>
+        </select>
+        <button onclick="addTask()">Feladat hozzáadása</button>
+    </div>
+
+    <!-- Feladat törlése -->
+    <div class="form-container">
+        <h3>Feladat törlése</h3>
+        <input type="number" id="deleteId" placeholder="Feladat ID" />
+        <button onclick="deleteTask()">Feladat törlése</button>
+    </div>
+
+    <script>
+        // Feladatok betöltése a táblázatba
+        async function loadTasks() {
+            const response = await fetch('https://localhost:7045/api/tasks'); // API GET kérés
+            const tasks = await response.json(); // JSON válasz
+
+            const tableBody = document.getElementById('tb_feladatok');
+            tableBody.innerHTML = ''; // Ürítjük a táblázatot, mielőtt újratöltenénk
+
+            // Feladatok hozzáadása a táblázathoz
+            tasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${task.title}</td>
+                        <td>${task.description}</td>
+                        <td>${new Date(task.dueDate).toLocaleString()}</td>
+                        <td>${task.priority}</td>
+                        <td>${task.status}</td>
+                        <td>${task.userName || 'Ismeretlen'}</td> <!-- Felhasználó neve -->
+                        <td><button onclick="deleteTaskById(${task.id})">Törlés</button></td>
+                    `;
+                tableBody.appendChild(row); // A sor hozzáadása a táblázathoz
+            });
+        }
+
+        // Felhasználók betöltése a select listába
+        async function loadUsers() {
+            const response = await fetch('https://localhost:7045/api/users'); // API GET kérés a felhasználókhoz
+            const users = await response.json(); // JSON válasz
+
+            const userSelect = document.getElementById('newUser');
+            userSelect.innerHTML = '<option value="" disabled selected>Válassz felhasználót</option>'; // Alapértelmezett opció
+
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id; // User ID
+                option.textContent = user.username; // Username
+                userSelect.appendChild(option);
+            });
+        }
+
+        // Oldal betöltésekor feladatok és felhasználók betöltése
+        window.onload = () => {
+            loadTasks();
+            loadUsers();
+        };
+
+        // Új feladat hozzáadása
+        async function addTask() {
+            const newTask = {
+                title: document.getElementById('newTitle').value,
+                description: document.getElementById('newDescription').value,
+                dueDate: document.getElementById('newDueDate').value,
+                priority: document.getElementById('newPriority').value,
+                status: document.getElementById('newStatus').value,
+                userId: document.getElementById('newUser').value // Kiválasztott felhasználó ID
+            };
+
+            // POST kérés a backendhez új feladat hozzáadásához
+            const response = await fetch('https://localhost:7045/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTask) // A feladat adatainak küldése
+            });
+
+            if (response.ok) {
+                alert('Feladat hozzáadva!');
+                loadTasks(); // Újratöltjük a feladatokat
+            } else {
+                alert('Hiba történt a feladat hozzáadásakor!');
+            }
+        }
+
+        // Feladat törlése ID alapján
+        async function deleteTaskById(id) {
+            const response = await fetch(`https://localhost:7045/api/tasks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Feladat törölve!');
+                loadTasks(); // Újratöltjük a feladatokat
+            } else {
+                alert('Hiba történt a feladat törlésénél!');
+            }
+        }
+
+        // Feladat törlése az ID mező alapján
+        async function deleteTask() {
+            const id = document.getElementById('deleteId').value;
+            const response = await fetch(`https://localhost:7045/api/tasks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Feladat törölve!');
+                loadTasks(); // Újratöltjük a feladatokat
+            } else {
+                alert('Hiba történt a feladat törlésénél!');
+            }
+        }
+    </script>
+</body>
+</html>
