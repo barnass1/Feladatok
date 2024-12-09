@@ -29,7 +29,8 @@ namespace FeladatokWebApp.Controllers
                         UserName = dbContext.Users
                             .Where(user => user.Id == task.UserId)
                             .Select(user => user.Username)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                        UserId = task.UserId
                     })
                     .ToList();
 

@@ -5,35 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feladatok Táblázat</title>
     <style>
+        /* Alapvető beállítások */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4ede4; /* Lágy bézses háttér */
+            color: #4a4a4a; /* Sötét, semleges szöveg */
+            line-height: 1.6;
+        }
+
+        h1, h3 {
+            text-align: center;
+            font-weight: 600;
+            color: #8b6f47; /* Elegáns barna */
+            margin: 20px 0;
+        }
+
+        /* Táblázat stílus */
         table {
-            width: 100%;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
             border-collapse: collapse;
+            background: #ffffff; /* Fehér háttér */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 16px 20px;
             text-align: left;
         }
 
         th {
-            background-color: #f4f4f4;
-            font-weight: bold;
+            background-color: #d9c2a9; /* Világos barnás árnyalat */
+            color: #ffffff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            border-bottom: 1px solid #f0e6db; /* Finom vonalak */
+        }
+
+        tr:last-child td {
+            border-bottom: none;
         }
 
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #fdf7f0; /* Lágy bézses árnyalat */
         }
 
-        .form-container {
-            margin: 20px 0;
+        tr:hover {
+            background-color: #f5ede4; /* Finom kiemelés */
+            transition: background-color 0.3s ease;
         }
 
-            .form-container input, .form-container select, .form-container button {
-                margin: 5px;
-                padding: 8px;
+        td button {
+            background-color: #8b6f47; /* Elegáns barna */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+            td button:hover {
+                background-color: #6c5438; /* Sötétebb barna */
             }
+
+        /* Űrlap stílus */
+        .form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #ffffff; /* Fehér háttér */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+            .form-container h3 {
+                margin-bottom: 20px;
+                color: #8b6f47; /* Elegáns barna */
+            }
+
+            .form-container input,
+            .form-container select,
+            .form-container button {
+                width: calc(33.33% - 20px);
+                margin: 10px 0;
+                padding: 12px 15px;
+                font-size: 14px;
+                border: 1px solid #d9c2a9;
+                border-radius: 6px;
+                background-color: #f9f6f1; /* Finom bézses árnyalat */
+                box-sizing: border-box;
+                transition: border-color 0.2s ease;
+            }
+
+                .form-container input:focus,
+                .form-container select:focus {
+                    outline: none;
+                    border-color: #8b6f47;
+                    box-shadow: 0 0 4px rgba(139, 111, 71, 0.4);
+                }
+
+            .form-container button {
+                background-color: #8b6f47; /* Elegáns barna */
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+            }
+
+                .form-container button:hover {
+                    background-color: #6c5438; /* Sötétebb barna */
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 10px rgba(108, 84, 56, 0.3);
+                }
+
+        /* Reszponzív dizájn */
+        @media (max-width: 768px) {
+            .form-container input,
+            .form-container select,
+            .form-container button {
+                width: 100%;
+            }
+        }
     </style>
+
+
+
 </head>
 <body>
     <h1>Feladatok</h1>
@@ -68,6 +178,7 @@
             <option value="Magas">Magas</option>
         </select>
         <select id="newStatus">
+            <option value="Új">Új</option>
             <option value="Folyamatban">Folyamatban</option>
             <option value="Befejezett">Befejezett</option>
         </select>
@@ -75,13 +186,6 @@
             <option value="" disabled selected>Válassz felhasználót</option>
         </select>
         <button onclick="addTask()">Feladat hozzáadása</button>
-    </div>
-
-    <!-- Feladat törlése -->
-    <div class="form-container">
-        <h3>Feladat törlése</h3>
-        <input type="number" id="deleteId" placeholder="Feladat ID" />
-        <button onclick="deleteTask()">Feladat törlése</button>
     </div>
 
     <script>
@@ -97,33 +201,46 @@
             tasks.forEach(task => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                        <td>${task.title}</td>
-                        <td>${task.description}</td>
-                        <td>${new Date(task.dueDate).toLocaleString()}</td>
-                        <td>${task.priority}</td>
-                        <td>${task.status}</td>
-                        <td>${task.userName || 'Ismeretlen'}</td> <!-- Felhasználó neve -->
-                        <td><button onclick="deleteTaskById(${task.id})">Törlés</button></td>
-                    `;
+                                    <td>${task.title}</td>
+                                    <td>${task.description}</td>
+                                    <td>${new Date(task.dueDate).toLocaleString('sv-SE', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                                    <td>${task.priority}</td>
+                                    <td>${task.status}</td>
+                                    <td>${task.userName || 'Ismeretlen'}</td>
+                                    <td><button onclick="deleteTaskById(${task.id})">Törlés</button></td>
+                                `;
                 tableBody.appendChild(row); // A sor hozzáadása a táblázathoz
             });
         }
 
-        // Felhasználók betöltése a select listába
         async function loadUsers() {
-            const response = await fetch('https://localhost:7045/api/users'); // API GET kérés a felhasználókhoz
-            const users = await response.json(); // JSON válasz
+            const response = await fetch('https://localhost:7045/api/tasks');
+            const tasks = await response.json();
 
             const userSelect = document.getElementById('newUser');
-            userSelect.innerHTML = '<option value="" disabled selected>Válassz felhasználót</option>'; // Alapértelmezett opció
+            userSelect.innerHTML = '<option value="" disabled selected>Válassz felhasználót</option>';
 
-            users.forEach(user => {
-                const option = document.createElement('option');
-                option.value = user.id; // User ID
-                option.textContent = user.username; // Username
-                userSelect.appendChild(option);
+            const uniqueUsers = new Set();
+
+            tasks.forEach(task => {
+                if (!uniqueUsers.has(task.userId)) {
+                    uniqueUsers.add(task.userId);
+
+                    const option = document.createElement('option');
+                    option.value = task.userId;
+                    option.innerText = task.userName;
+                    userSelect.appendChild(option);
+                }
             });
         }
+
+
+
+        // Oldal betöltésekor feladatok és felhasználók betöltése
+        window.onload = () => {
+            loadTasks();
+            loadUsers();
+        };
 
         // Oldal betöltésekor feladatok és felhasználók betöltése
         window.onload = () => {
@@ -159,21 +276,6 @@
 
         // Feladat törlése ID alapján
         async function deleteTaskById(id) {
-            const response = await fetch(`https://localhost:7045/api/tasks/${id}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                alert('Feladat törölve!');
-                loadTasks(); // Újratöltjük a feladatokat
-            } else {
-                alert('Hiba történt a feladat törlésénél!');
-            }
-        }
-
-        // Feladat törlése az ID mező alapján
-        async function deleteTask() {
-            const id = document.getElementById('deleteId').value;
             const response = await fetch(`https://localhost:7045/api/tasks/${id}`, {
                 method: 'DELETE'
             });

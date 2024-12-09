@@ -53,7 +53,7 @@ namespace FeladatokForm
             if (felhasznalo != null)
             {
                 var feladatok = _context.Tasks.Where(t => t.UserId == felhasznalo.Id).ToList();
-                FeladatokDataGridView1.DataSource = feladatok;
+                FeladatokDataGridView1.DataSource = feladatok; 
             }
             else
             {
