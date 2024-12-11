@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace FeladatokWebApp.Controllers
 {
+
+    //Scaffold-DbContext "Data Source=barnimedve.database.windows.net;Initial Catalog=Feladatok;Persist Security Info=True;User ID=barnimedve;Password=Corvo12345;Encrypt=True;Trust Server Certificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context FeladatokDbContext
+
     [Route("api/tasks")]
     [ApiController]
     public class FeladatController : ControllerBase
