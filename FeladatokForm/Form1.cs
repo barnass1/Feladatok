@@ -132,15 +132,10 @@ namespace FeladatokForm
 
                 if (result == DialogResult.Yes)
                 {
-                    // Retrieve and delete all tasks associated with the selected user
                     var userTasks = _context.Tasks.Where(t => t.UserId == selectedUser.Id).ToList();
                     _context.Tasks.RemoveRange(userTasks);
-
-                    // Delete the selected user
                     _context.Users.Remove(selectedUser);
                     _context.SaveChanges();
-
-                    // Reload the users and tasks
                     Load_Felhasznalok();
                     Load_Feladatok();
                 }

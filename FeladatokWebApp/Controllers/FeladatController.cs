@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using System.Linq;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FeladatokWebApp.Controllers
 {
@@ -83,18 +82,14 @@ namespace FeladatokWebApp.Controllers
             {
                 try
                 {
-                    // Az új feladat mentése az adatbázisba
                     dbContext.Tasks.Add(newTask);
-                    dbContext.SaveChanges(); // Az adatbázis műveletek véglegesítése
+                    dbContext.SaveChanges();
                 }
                 catch (Exception ex)
                 {
-                    // Hiba esetén megfelelő válasz küldése
                     return StatusCode(500, $"Hiba történt a mentés során: {ex.Message}");
                 }
             }
-
-            // Visszaküldjük az újonnan létrehozott erőforrást a kliensnek
             return CreatedAtAction(nameof(Get), new { id = newTask.Id }, newTask);
         }
 
@@ -120,7 +115,7 @@ namespace FeladatokWebApp.Controllers
 
                 try
                 {
-                    dbContext.SaveChanges(); // Adatbázis frissítése
+                    dbContext.SaveChanges();
                 }
                 catch (Exception ex)
                 {
@@ -128,7 +123,7 @@ namespace FeladatokWebApp.Controllers
                 }
             }
 
-            return NoContent(); // Sikeres törlés
+            return NoContent();
         }
     }
 }
